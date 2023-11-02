@@ -37,13 +37,48 @@ for (i in 1:length(permXa)){
   }
 }
 
+deltaX <- c(2,2,3,3,4,5,6,7,8,10)
 
+PartialDigestProblem <- function(deltaX) {
+  width <- max(deltaX)
+  deltaX <- deltaX[deltaX != width]
+  X <- c(0, width)
+  Place(deltaX, X, width)
+}
 
+Place <- function(deltaX, X, width) {
+  if (length(deltaX) == 0) {
+    print(X)
+    return
+  }
+  
+  y <- max(deltaX)
+  
+  if (all(Remove(y, X) %in% deltaX)) {
+    X <- c(X, y)
+    lengths_to_remove <- Remove(y, X)
+    deltaX <- Remove(deltaX, lengths_to_remove)
+    Place(deltaX, X, width)
+    X <- setdiff(X, y)
+    deltaX <- c(deltaX, lengths_to_remove)
+  }
+  
+  if (all(Remove(width - y, X) %in% deltaX)) {
+    X <- c(X, width - y)
+    lengths_to_remove <- Remove(width - y, X)
+    deltaX <- Remove(deltaX, lengths_to_remove)
+    Place(deltaX, X, width)
+    X <- setdiff(X, width - y)
+    deltaX <- c(deltaX, lengths_to_remove)
+  }
+}
 
+Remove <- function(lengths, X) {
+  lengths_to_remove <- lengths[lengths %in% X]
+  return(lengths_to_remove)
+}
 
-
-
-
+PartialDigestProblem(deltaX)
 
 
 
